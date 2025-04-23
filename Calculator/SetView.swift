@@ -6,3 +6,11 @@
 //
 
 import Foundation
+import SwiftUI
+
+struct SetView: View {
+    var body: some View {
+        Text("Hello, SetView!")
+    }
+}
+
