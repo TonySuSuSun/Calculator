@@ -13,37 +13,40 @@ struct ContentView: View {
     
     // 用來儲存當前顯示在螢幕上的數字
     @State private var display = "0"
-    
+    //用來儲存計算過程
+    @State private var calculationProcess = ""
     // 用來儲存計算時的前一個數字以及目前的運算符號
     @State private var previousValue: Double?
     @State private var currentOperator: String?
-    
     // 用來標記是否正在輸入數字
     @State private var isTypingNumber = false
 
+    
+    
     var body: some View {
         NavigationStack(path: $path) {
             VStack {
-                // 顯示螢幕上的數字
-                Text(display)
+               //顯示計算過程
+                Text(calculationProcess)
                     .font(.system(size: 50))
                     .padding(.trailing, 0.0)
                     .padding(.bottom, 10.0)
                     .lineLimit(1)
                     .frame(minWidth: 0, maxWidth: 300, alignment: .trailing)
-                
-                Text(" ")
+                // 顯示結果
+                Text(display)
                     .font(.system(size: 30))
                     .padding(.trailing, 0.0)
                     .padding(.bottom, 10.0)
                     .lineLimit(1)
                     .frame(minWidth: 0, maxWidth: 300, alignment: .trailing)
 
-                // 第一行按鈕，AC (清除)，% 和 ⌫ (刪除)
+                // 第一行按鈕，ㄈ (清除)，% 和 ⌫ (刪除)
                 HStack {
                     Button("AC") {
                         // 點擊 AC 按鈕時清除所有狀態
                         display = "0"
+                        calculationProcess = ""
                         previousValue = nil
                         currentOperator = nil
                         isTypingNumber = false
@@ -54,7 +57,7 @@ struct ContentView: View {
                     .background(Color(.systemGray4))
                     .clipShape(Circle())
                     Button("%") {
-                        // % 功能待實現
+                        handleOperator("%") // 處理除法操作
                     }
                     .frame(width: 80.0, height: 80.0)
                     .font(.system(size: 40))
@@ -77,7 +80,7 @@ struct ContentView: View {
                     .background(Color(.systemGray4))
                     .clipShape(Circle())
                     Button("÷") {
-                        handleOperator("/") // 處理除法操作
+                        handleOperator("÷") // 處理除法操作
                     }
                     .frame(width: 80.0, height: 80.0)
                     .font(.system(size: 40))
@@ -113,7 +116,7 @@ struct ContentView: View {
                     .background(.white)
                     .clipShape(Circle())
                     Button("×") {
-                        handleOperator("*") // 處理乘法操作
+                        handleOperator("×") // 處理乘法操作
                     }
                     .frame(width: 80.0, height: 80.0)
                     .font(.system(size: 40))
@@ -197,7 +200,7 @@ struct ContentView: View {
                 // 最後一行按鈕 (0 和 .，以及計算結果)
                 HStack {
                     Button("00") {
-                        handleDigit("") // 處理數字 00
+                        handleDoubleZero() // 處理數字 00
                     }
                     .frame(width: 80.0, height: 80.0)
                     .font(.system(size: 40))
@@ -296,16 +299,11 @@ struct ContentView: View {
     // 處理數字輸入
     func handleDigit(_ digit: String) {
         if isTypingNumber {
-            display += digit
+            calculationProcess += digit
         } else {
-            if display.contains(" ") {
-                // 如果有運算符，代表正在輸入第二個數字
-                display += digit
-            } else {
-                display = digit
-            }
-            isTypingNumber = true
+            calculationProcess += " " + digit
         }
+        isTypingNumber = true
     }
 
     // 處理小數點輸入
@@ -318,46 +316,55 @@ struct ContentView: View {
 
     // 處理運算符號的輸入
     func handleOperator(_ op: String) {
-        if let current = Double(display.components(separatedBy: " ").last ?? "") {
-            if let prev = previousValue, let currentOp = currentOperator, isTypingNumber {
+        if isTypingNumber {
+            calculationProcess += " " + op
+            isTypingNumber = false
+        }
+
+        if let current = Double(calculationProcess.components(separatedBy: " ").dropLast().last ?? "") {
+            if let prev = previousValue, let currentOp = currentOperator {
                 var result: Double = 0
                 switch currentOp {
                 case "+": result = prev + current
                 case "-": result = prev - current
-                case "*": result = prev * current
-                case "/": result = current != 0 ? prev / current : 0
+                case "×": result = prev * current
+                case "%": result = prev.truncatingRemainder(dividingBy: current)
+                case "÷": result = current != 0 ? prev / current : 0
                 default: break
                 }
                 previousValue = result
-                display = formatNumber(result) + " \(op) "
             } else {
                 previousValue = current
-                display = formatNumber(current) + " \(op) "
             }
             currentOperator = op
-            isTypingNumber = false
         }
     }
+
 
     // 計算結果
     func calculateResult() {
         guard let prev = previousValue, let op = currentOperator else { return }
-        let components = display.components(separatedBy: " ")
-        if components.count >= 3, let current = Double(components.last ?? "") {
+
+        let components = calculationProcess.components(separatedBy: " ")
+        if let last = components.last, let current = Double(last) {
             var result: Double = 0
             switch op {
             case "+": result = prev + current
             case "-": result = prev - current
-            case "*": result = prev * current
-            case "/": result = current != 0 ? prev / current : 0
+            case "×": result = prev * current
+            case "%": result = prev.truncatingRemainder(dividingBy: current)
+            case "÷": result = current != 0 ? prev / current : 0
             default: break
             }
+
+            calculationProcess += " ="
             display = formatNumber(result)
             previousValue = nil
             currentOperator = nil
             isTypingNumber = false
         }
     }
+
 
     // 格式化顯示的數字
     func formatNumber(_ number: Double) -> String {
@@ -373,8 +380,24 @@ struct ContentView: View {
         }
     }
 
+    //此為按鈕00，讓數字乘以１００所用
+    func handleDoubleZero() {
+        // 切割目前的過程為一段段字串（用空格）
+        var components = calculationProcess.components(separatedBy: " ")
+
+        // 嘗試抓到最後一個是數字的 component
+        if let last = components.last, let number = Double(last) {
+            let updated = number * 100
+            components.removeLast()
+            components.append(formatNumber(updated))
+            calculationProcess = components.joined(separator: " ")
+        }
+    }
 
 
+
+    
+    
     
     
     
