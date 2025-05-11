@@ -13,35 +13,140 @@ struct ContentView: View {
     
     // 用來儲存當前顯示在螢幕上的數字
     @State private var display = "0"
-    //用來儲存計算過程
+    // 用來儲存計算過程
     @State private var calculationProcess = ""
     // 用來儲存計算時的前一個數字以及目前的運算符號
     @State private var previousValue: Double?
     @State private var currentOperator: String?
     // 用來標記是否正在輸入數字
     @State private var isTypingNumber = false
+    // 右上角按鈕第一個按下出現更多運算使用
+    @State private var showAdvancedOperators = false
 
     
     
     var body: some View {
         NavigationStack(path: $path) {
             VStack {
+         
                //顯示計算過程
                 Text(calculationProcess)
-                    .font(.system(size: 50))
+                    .font(.system(size: 35))
                     .padding(.trailing, 0.0)
                     .padding(.bottom, 10.0)
                     .lineLimit(1)
-                    .frame(minWidth: 0, maxWidth: 300, alignment: .trailing)
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+                    .padding(.trailing, 30)
+                    .padding(.top, 50)
+                
                 // 顯示結果
                 Text(display)
-                    .font(.system(size: 30))
+                    .font(.system(size: 25))
                     .padding(.trailing, 0.0)
                     .padding(.bottom, 10.0)
                     .lineLimit(1)
-                    .frame(minWidth: 0, maxWidth: 300, alignment: .trailing)
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+                    .padding(.trailing, 30)
 
-                // 第一行按鈕，ㄈ (清除)，% 和 ⌫ (刪除)
+                           
+                
+                //判斷是否按下進階其他功能鍵
+                if showAdvancedOperators {
+                    VStack {
+                        Spacer()
+                        
+                        HStack {
+                            Button("!") {
+                                handleFunction("fact")
+                            }
+                            .frame(width: 50, height: 50)
+                            .font(.system(size: 20))
+                            .foregroundColor(.black)
+                            .background(Color.white)
+                            .clipShape(Circle())
+                            .padding(.horizontal, 4)
+                            
+                            Button("log") {
+                                handleFunction("log")
+                            }
+                            .frame(width: 50, height: 50)
+                            .font(.system(size: 20))
+                            .foregroundColor(.black)
+                            .background(Color.white)
+                            .clipShape(Circle())
+                            .padding(.horizontal, 4)
+                            
+                            Button("π") {
+                                handleDigit(String(Double.pi))
+                            }
+                            .frame(width: 50, height: 50)
+                            .font(.system(size: 20))
+                            .foregroundColor(.black)
+                            .background(Color.white)
+                            .clipShape(Circle())
+                            .padding(.horizontal, 4)
+                            
+                            Button("√") {
+                                handleFunction("sqrt")
+                            }
+                            .frame(width: 50, height: 50)
+                            .font(.system(size: 20))
+                            .foregroundColor(.black)
+                            .background(Color.white)
+                            .clipShape(Circle())
+                            .padding(.horizontal, 4)
+                          
+                        }
+                        HStack {
+                            Button("sin") {
+                                handleFunction("sin")
+                            }
+                            .frame(width: 50, height: 50)
+                            .font(.system(size: 20))
+                            .foregroundColor(.black)
+                            .background(Color.white)
+                            .clipShape(Circle())
+                            .padding(.horizontal, 4)
+                            
+                            Button("cos") {
+                                handleFunction("cos")
+                            }
+                            .frame(width: 50, height: 50)
+                            .font(.system(size: 20))
+                            .foregroundColor(.black)
+                            .background(Color.white)
+                            .clipShape(Circle())
+                            .padding(.horizontal, 4)
+                            
+                            Button("tan") {
+                                handleFunction("tan")
+                            }
+                            .frame(width: 50, height: 50)
+                            .font(.system(size: 20))
+                            .foregroundColor(.black)
+                            .background(Color.white)
+                            .clipShape(Circle())
+                            .padding(.horizontal, 4)
+                            
+                            Button("cot") {
+                                handleFunction("cot")
+                            }
+                            .frame(width: 50, height: 50)
+                            .font(.system(size: 20))
+                            .foregroundColor(.black)
+                            .background(Color.white)
+                            .clipShape(Circle())
+                            .padding(.horizontal, 4)
+                            
+                        }
+                    }
+                   
+                }
+                
+                //********************上面為進階運算排版*************************
+                //********************下面為正常運算排版*************************
+                // 第一行按鈕
+                Spacer()
                 HStack {
                     Button("AC") {
                         // 點擊 AC 按鈕時清除所有狀態
@@ -66,10 +171,10 @@ struct ContentView: View {
                     .clipShape(Circle())
                     Button("⌫") {
                         // 刪除最後一位
-                        if isTypingNumber && !display.isEmpty {
-                            display.removeLast()
-                            if display.isEmpty {
-                                display = "0"
+                        if isTypingNumber && !calculationProcess.isEmpty {
+                            calculationProcess.removeLast()
+                            if calculationProcess.isEmpty {
+                                calculationProcess = "0"
                                 isTypingNumber = false
                             }
                         }
@@ -125,7 +230,7 @@ struct ContentView: View {
                     .clipShape(Circle())
                 }
 
-                // 更多數字和運算符按鈕
+                // 數字和運算符按鈕
                 HStack {
                     Button("4") {
                         handleDigit("4") // 處理數字 4
@@ -161,7 +266,7 @@ struct ContentView: View {
                     .clipShape(Circle())
                 }
 
-                // 更多數字和運算符按鈕
+                // 數字和運算符按鈕
                 HStack {
                     Button("1") {
                         handleDigit("1") // 處理數字 1
@@ -232,12 +337,14 @@ struct ContentView: View {
                     .background(.orange)
                     .clipShape(Circle())
                 }
+               
             }
+            
+            // 各種工具列按鈕
             .toolbar {
-                // 各種工具列按鈕
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button {
-
+                        
                     } label: {
                         Image(systemName: "arrow.up.right.and.arrow.down.left")
                     }
@@ -246,7 +353,7 @@ struct ContentView: View {
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button{
-
+                        showAdvancedOperators.toggle()
                     }label: {
                         VStack{
                             HStack{
@@ -309,10 +416,17 @@ struct ContentView: View {
     // 處理小數點輸入
     func handleDecimalPoint() {
         if !display.contains(".") {
-            display += "."
-            isTypingNumber = true
+            if isTypingNumber {
+                calculationProcess += "."
+            } else {
+                //尚未開始輸入數字但按下小數點
+                display = "0."
+                calculationProcess += "0."
+                isTypingNumber = true
+            }
         }
     }
+
 
     // 處理運算符號的輸入
     func handleOperator(_ op: String) {
@@ -320,63 +434,80 @@ struct ContentView: View {
             calculationProcess += " " + op
             isTypingNumber = false
         }
-
-        if let current = Double(calculationProcess.components(separatedBy: " ").dropLast().last ?? "") {
-            if let prev = previousValue, let currentOp = currentOperator {
-                var result: Double = 0
-                switch currentOp {
-                case "+": result = prev + current
-                case "-": result = prev - current
-                case "×": result = prev * current
-                case "%": result = prev.truncatingRemainder(dividingBy: current)
-                case "÷": result = current != 0 ? prev / current : 0
-                default: break
-                }
-                previousValue = result
-            } else {
-                previousValue = current
-            }
-            currentOperator = op
-        }
     }
+    //內建並沒有cot
+    func cot(_ x: Double) -> Double {
+        return 1 / tan(x)
+    }
+    
+    //更多功能鍵使用
+    func handleFunction(_ function: String) {
+        // 取最後輸入的數字進行處理
+        var components = calculationProcess.components(separatedBy: " ")
+        
+        if let last = components.last, let number = Double(last) {
+            var result: Double?
+            
+            switch function {
+            case "sin": result = sin(number)
+            case "cos": result = cos(number)
+            case "tan": result = tan(number)
+            case "cot":result = cot(number)
+            case "log": result = log10(number)
+            case "sqrt": result = sqrt(number)
+            case "fact":
+                //此if用於避免數字過大，例如過大階層
+                if number >= 0 && floor(number) == number && number <= 170 {
+                    let factorial = (1...Int(number)).reduce(1, *)
+                    result = Double(factorial)
+                } else {
+                    result = nil
+                }
 
-
-    // 計算結果
-    func calculateResult() {
-        guard let prev = previousValue, let op = currentOperator else { return }
-
-        let components = calculationProcess.components(separatedBy: " ")
-        if let last = components.last, let current = Double(last) {
-            var result: Double = 0
-            switch op {
-            case "+": result = prev + current
-            case "-": result = prev - current
-            case "×": result = prev * current
-            case "%": result = prev.truncatingRemainder(dividingBy: current)
-            case "÷": result = current != 0 ? prev / current : 0
             default: break
             }
 
-            calculationProcess += " ="
-            display = formatNumber(result)
-            previousValue = nil
-            currentOperator = nil
-            isTypingNumber = false
+            if let r = result {
+                components.removeLast()
+                components.append(formatNumber(r))
+                calculationProcess = components.joined(separator: " ")
+                display = formatNumber(r)
+            } else {
+                display = "錯誤"
+            }
         }
     }
 
 
-    // 格式化顯示的數字
-    func formatNumber(_ number: Double) -> String {
-        // 檢查數字是否超過 Int 的最大值
-        if number > Double(Int.max) || number < Double(Int.min) {
-            return String(format: "%.8g", number) // 顯示為 Double 格式
-        }
-        
-        if number.truncatingRemainder(dividingBy: 1) == 0 {
-            return "\(Int(number))" // 如果是整數，轉換為 Int 顯示
+
+    // 計算結果，先乘除後加減
+    func calculateResult() {
+        let expression = calculationProcess.trimmingCharacters(in: .whitespaces)
+
+        if let result = ExpressionParser.evaluate(expression: expression) {
+            display = formatNumber(result)
+            calculationProcess += " ="
+            previousValue = nil
+            currentOperator = nil
+            isTypingNumber = false
         } else {
-            return String(format: "%.8g", number) // 顯示精度最多8位，避免太長
+            display = "錯誤"
+        }
+    }
+
+
+    func formatNumber(_ number: Double) -> String {
+        // 如果超過 Int 可表示的範圍，使用科學記號表示法
+        if number > Double(Int.max) || number < Double(Int.min) {
+            return String(format: "%.8g", number)
+        }
+
+        // 檢查是否為整數
+        if number.truncatingRemainder(dividingBy: 1) == 0 {
+            return String(Int(number))
+        } else {
+            // 最多 8 位有效數字，去掉多餘的 0
+            return String(format: "%g", number)
         }
     }
 
@@ -394,14 +525,54 @@ struct ContentView: View {
         }
     }
 
-
-
-    
-    
-    
-    
     
 }
+
+
+
+// 解析字串運算式 先乘除後加減
+class ExpressionParser {
+    static func evaluate(expression: String) -> Double? {
+        var tokens = expression.components(separatedBy: " ")
+
+        // 處理乘除
+        var index = 0
+        while index < tokens.count {
+            if tokens[index] == "×" || tokens[index] == "÷" {
+                if let left = Double(tokens[index - 1]),
+                   let right = Double(tokens[index + 1]) {
+                    let result = tokens[index] == "×" ? left * right : left / right
+                    tokens.replaceSubrange(index - 1...index + 1, with: [String(result)])
+                    index = max(index - 1, 0) // 回到前一個 index
+                } else {
+                    return nil
+                }
+            } else {
+                index += 1
+            }
+        }
+
+        // 處理加減
+        index = 0
+        while index < tokens.count {
+            if tokens[index] == "+" || tokens[index] == "-" {
+                if let left = Double(tokens[index - 1]),
+                   let right = Double(tokens[index + 1]) {
+                    let result = tokens[index] == "+" ? left + right : left - right
+                    tokens.replaceSubrange(index - 1...index + 1, with: [String(result)])
+                    index = max(index - 1, 0)
+                } else {
+                    return nil
+                }
+            } else {
+                index += 1
+            }
+        }
+
+        return Double(tokens.first ?? "")
+    }
+}
+
 
 #Preview {
     ContentView()
