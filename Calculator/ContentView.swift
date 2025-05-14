@@ -446,6 +446,11 @@ struct ContentView: View {
         var components = calculationProcess.components(separatedBy: " ")
         
         if let last = components.last, let number = Double(last) {
+            if number.isNaN || number.isInfinite {
+                display = "⚠️ 無效數值"
+                return
+            }
+
             var result: Double?
             
             switch function {
@@ -456,13 +461,15 @@ struct ContentView: View {
             case "log": result = log10(number)
             case "sqrt": result = sqrt(number)
             case "fact":
-                //此if用於避免數字過大，例如過大階層
-                if number >= 0 && floor(number) == number && number <= 170 {
-                    let factorial = (1...Int(number)).reduce(1, *)
-                    result = Double(factorial)
-                } else {
-                    result = nil
+                if number < 0 || floor(number) != number {
+                    display = "⚠️ 階層僅支援非負整數"
+                    return
                 }
+                
+                // 使用 Double 來計算大型階層，注意超大值會失真
+                let factorial = (1...Int(number)).reduce(1.0) { $0 * Double($1) }
+                result = factorial
+
 
             default: break
             }
@@ -497,9 +504,9 @@ struct ContentView: View {
 
 
     func formatNumber(_ number: Double) -> String {
-        // 如果超過 Int 可表示的範圍，使用科學記號表示法
-        if number > Double(Int.max) || number < Double(Int.min) {
-            return String(format: "%.8g", number)
+        // 若數字非常大，使用科學記號表示（例如 > 1e10）
+        if abs(number) >= 1e10 || abs(number) <= 1e-6 {
+            return String(format: "%.8e", number)
         }
 
         // 檢查是否為整數
