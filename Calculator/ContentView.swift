@@ -162,7 +162,7 @@ struct ContentView: View {
                     .background(Color(.systemGray4))
                     .clipShape(Circle())
                     Button("%") {
-                        handleOperator("%") // 處理除法操作
+                        handleOperator("%") // 處理求於數
                     }
                     .frame(width: 80.0, height: 80.0)
                     .font(.system(size: 40))
@@ -417,7 +417,7 @@ struct ContentView: View {
     func handleDecimalPoint() {
         if !display.contains(".") {
             if isTypingNumber {
-                calculationProcess += "."
+                calculationProcess += ".";
             } else {
                 //尚未開始輸入數字但按下小數點
                 display = "0."
@@ -524,26 +524,45 @@ struct ContentView: View {
             calculationProcess = components.joined(separator: " ")
         }
     }
-
+    
+    
     
 }
 
 
 
-// 解析字串運算式 先乘除後加減
+// 解析字串運算式 先乘除與取餘，再加減
 class ExpressionParser {
     static func evaluate(expression: String) -> Double? {
         var tokens = expression.components(separatedBy: " ")
 
-        // 處理乘除
+        // 處理乘除與取餘
         var index = 0
         while index < tokens.count {
-            if tokens[index] == "×" || tokens[index] == "÷" {
+            if tokens[index] == "×" || tokens[index] == "÷" || tokens[index] == "%" {
                 if let left = Double(tokens[index - 1]),
                    let right = Double(tokens[index + 1]) {
-                    let result = tokens[index] == "×" ? left * right : left / right
-                    tokens.replaceSubrange(index - 1...index + 1, with: [String(result)])
-                    index = max(index - 1, 0) // 回到前一個 index
+
+                    var result: Double?
+
+                    switch tokens[index] {
+                    case "×":
+                        result = left * right
+                    case "÷":
+                        result = right != 0 ? left / right : nil
+                    case "%":
+                        result = right != 0 ? Double(Int(left) % Int(right)) : nil
+                    default:
+                        break
+                    }
+
+                    if let result = result {
+                        tokens.replaceSubrange(index - 1...index + 1, with: [String(result)])
+                        index = max(index - 1, 0)
+                    } else {
+                        return nil // 除以 0 或其他錯誤
+                    }
+
                 } else {
                     return nil
                 }
@@ -572,6 +591,9 @@ class ExpressionParser {
         return Double(tokens.first ?? "")
     }
 }
+
+
+
 
 
 #Preview {
