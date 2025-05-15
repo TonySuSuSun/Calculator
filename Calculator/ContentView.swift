@@ -22,6 +22,9 @@ struct ContentView: View {
     @State private var isTypingNumber = false
     // 右上角按鈕第一個按下出現更多運算使用
     @State private var showAdvancedOperators = false
+    //紀錄是否按下等於
+    @State private var didPressEqual = false
+
 
     
     
@@ -56,87 +59,129 @@ struct ContentView: View {
                         Spacer()
                         
                         HStack {
-                            Button("!") {
+                            //這樣的寫法可讓整個圓形才會成為觸控區域
+                            Button(action: {
                                 handleFunction("fact")
+                            }) {
+                                Text("!")
+                                    .font(.system(size: 20))
+                                    .frame(width: 50, height: 50)
+                                    .foregroundColor(.black)
+                                    .background(Color.white)
+                                    .clipShape(Circle())
+                                    .contentShape(Circle()) //點擊區是圓形
                             }
-                            .frame(width: 50, height: 50)
-                            .font(.system(size: 20))
-                            .foregroundColor(.black)
-                            .background(Color.white)
-                            .clipShape(Circle())
                             .padding(.horizontal, 4)
-                            
-                            Button("log") {
+                            .buttonStyle(PlainButtonStyle()) // 手機上去除黑框
+
+                            // log 按鈕
+                            Button(action: {
                                 handleFunction("log")
+                            }) {
+                                Text("log")
+                                    .font(.system(size: 20))
+                                    .frame(width: 50, height: 50)
+                                    .foregroundColor(.black)
+                                    .background(Color.white)
+                                    .clipShape(Circle())
+                                    .contentShape(Circle()) // 讓整個圓形皆可點擊
                             }
-                            .frame(width: 50, height: 50)
-                            .font(.system(size: 20))
-                            .foregroundColor(.black)
-                            .background(Color.white)
-                            .clipShape(Circle())
                             .padding(.horizontal, 4)
-                            
-                            Button("π") {
-                                handleDigit(String(Double.pi))
+                            .buttonStyle(PlainButtonStyle())
+
+                            // π 按鈕
+                            Button(action: {
+                                handleDigit("π")
+                            }) {
+                                Text("π")
+                                    .font(.system(size: 20))
+                                    .frame(width: 50, height: 50)
+                                    .foregroundColor(.black)
+                                    .background(Color.white)
+                                    .clipShape(Circle())
+                                    .contentShape(Circle()) // 讓整個圓形皆可點擊
                             }
-                            .frame(width: 50, height: 50)
-                            .font(.system(size: 20))
-                            .foregroundColor(.black)
-                            .background(Color.white)
-                            .clipShape(Circle())
                             .padding(.horizontal, 4)
-                            
-                            Button("√") {
+                            .buttonStyle(PlainButtonStyle())
+
+                            // √ 按鈕
+                            Button(action: {
                                 handleFunction("sqrt")
+                            }) {
+                                Text("√")
+                                    .font(.system(size: 20))
+                                    .frame(width: 50, height: 50)
+                                    .foregroundColor(.black)
+                                    .background(Color.white)
+                                    .clipShape(Circle())
+                                    .contentShape(Circle()) // 讓整個圓形皆可點擊
                             }
-                            .frame(width: 50, height: 50)
-                            .font(.system(size: 20))
-                            .foregroundColor(.black)
-                            .background(Color.white)
-                            .clipShape(Circle())
                             .padding(.horizontal, 4)
-                          
+                            .buttonStyle(PlainButtonStyle())
+
+                            
                         }
                         HStack {
-                            Button("sin") {
+                            // sin 按鈕
+                            Button(action: {
                                 handleFunction("sin")
+                            }) {
+                                Text("sin")
+                                    .font(.system(size: 20))
+                                    .frame(width: 50, height: 50)
+                                    .foregroundColor(.black)
+                                    .background(Color.white)
+                                    .clipShape(Circle())
+                                    .contentShape(Circle())
                             }
-                            .frame(width: 50, height: 50)
-                            .font(.system(size: 20))
-                            .foregroundColor(.black)
-                            .background(Color.white)
-                            .clipShape(Circle())
                             .padding(.horizontal, 4)
-                            
-                            Button("cos") {
+                            .buttonStyle(PlainButtonStyle())
+
+                            // cos 按鈕
+                            Button(action: {
                                 handleFunction("cos")
+                            }) {
+                                Text("cos")
+                                    .font(.system(size: 20))
+                                    .frame(width: 50, height: 50)
+                                    .foregroundColor(.black)
+                                    .background(Color.white)
+                                    .clipShape(Circle())
+                                    .contentShape(Circle())
                             }
-                            .frame(width: 50, height: 50)
-                            .font(.system(size: 20))
-                            .foregroundColor(.black)
-                            .background(Color.white)
-                            .clipShape(Circle())
                             .padding(.horizontal, 4)
-                            
-                            Button("tan") {
+                            .buttonStyle(PlainButtonStyle())
+
+                            // tan 按鈕
+                            Button(action: {
                                 handleFunction("tan")
+                            }) {
+                                Text("tan")
+                                    .font(.system(size: 20))
+                                    .frame(width: 50, height: 50)
+                                    .foregroundColor(.black)
+                                    .background(Color.white)
+                                    .clipShape(Circle())
+                                    .contentShape(Circle())
                             }
-                            .frame(width: 50, height: 50)
-                            .font(.system(size: 20))
-                            .foregroundColor(.black)
-                            .background(Color.white)
-                            .clipShape(Circle())
                             .padding(.horizontal, 4)
-                            
-                            Button("cot") {
+                            .buttonStyle(PlainButtonStyle())
+
+                            // cot 按鈕
+                            Button(action: {
                                 handleFunction("cot")
+                            }) {
+                                Text("cot")
+                                    .font(.system(size: 20))
+                                    .frame(width: 50, height: 50)
+                                    .foregroundColor(.black)
+                                    .background(Color.white)
+                                    .clipShape(Circle())
+                                    .contentShape(Circle())
                             }
-                            .frame(width: 50, height: 50)
-                            .font(.system(size: 20))
-                            .foregroundColor(.black)
-                            .background(Color.white)
-                            .clipShape(Circle())
                             .padding(.horizontal, 4)
+                            .buttonStyle(PlainButtonStyle())
+
                             
                         }
                     }
@@ -148,29 +193,40 @@ struct ContentView: View {
                 // 第一行按鈕
                 Spacer()
                 HStack {
-                    Button("AC") {
-                        // 點擊 AC 按鈕時清除所有狀態
+                    // AC 按鈕
+                    Button(action: {
                         display = "0"
                         calculationProcess = ""
                         previousValue = nil
                         currentOperator = nil
                         isTypingNumber = false
+                    }) {
+                        Text("AC")
+                            .font(.system(size: 30))
+                            .frame(width: 80, height: 80)
+                            .foregroundColor(.black)
+                            .background(Color(.systemGray4))
+                            .clipShape(Circle())
+                            .contentShape(Circle())
                     }
-                    .frame(width: 80.0, height: 80.0)
-                    .font(.system(size: 30))
-                    .foregroundColor(Color.black)
-                    .background(Color(.systemGray4))
-                    .clipShape(Circle())
-                    Button("%") {
-                        handleOperator("%") // 處理求於數
+                    .buttonStyle(PlainButtonStyle())
+
+                    // % 按鈕
+                    Button(action: {
+                        handleOperator("%")
+                    }) {
+                        Text("%")
+                            .font(.system(size: 40))
+                            .frame(width: 80, height: 80)
+                            .foregroundColor(.black)
+                            .background(Color(.systemGray4))
+                            .clipShape(Circle())
+                            .contentShape(Circle())
                     }
-                    .frame(width: 80.0, height: 80.0)
-                    .font(.system(size: 40))
-                    .foregroundColor(Color.black)
-                    .background(Color(.systemGray4))
-                    .clipShape(Circle())
-                    Button("⌫") {
-                        // 刪除最後一位
+                    .buttonStyle(PlainButtonStyle())
+
+                    // ⌫ 按鈕
+                    Button(action: {
                         if isTypingNumber && !calculationProcess.isEmpty {
                             calculationProcess.removeLast()
                             if calculationProcess.isEmpty {
@@ -178,166 +234,262 @@ struct ContentView: View {
                                 isTypingNumber = false
                             }
                         }
+                    }) {
+                        Text("⌫")
+                            .font(.system(size: 40))
+                            .frame(width: 80, height: 80)
+                            .foregroundColor(.black)
+                            .background(Color(.systemGray4))
+                            .clipShape(Circle())
+                            .contentShape(Circle())
                     }
-                    .frame(width: 80.0, height: 80.0)
-                    .font(.system(size: 40))
-                    .foregroundColor(Color.black)
-                    .background(Color(.systemGray4))
-                    .clipShape(Circle())
-                    Button("÷") {
-                        handleOperator("÷") // 處理除法操作
+                    .buttonStyle(PlainButtonStyle())
+
+                    // ÷ 按鈕
+                    Button(action: {
+                        handleOperator("÷")
+                    }) {
+                        Text("÷")
+                            .font(.system(size: 40))
+                            .frame(width: 80, height: 80)
+                            .foregroundColor(.black)
+                            .background(Color(.systemGray4))
+                            .clipShape(Circle())
+                            .contentShape(Circle())
                     }
-                    .frame(width: 80.0, height: 80.0)
-                    .font(.system(size: 40))
-                    .foregroundColor(Color.black)
-                    .background(Color(.systemGray4))
-                    .clipShape(Circle())
+                    .buttonStyle(PlainButtonStyle())
                 }
 
                 // 下面的數字和運算符按鈕
                 HStack {
-                    Button("7") {
-                        handleDigit("7") // 處理數字 7
+                    // 數字 7
+                    Button(action: {
+                        handleDigit("7")
+                    }) {
+                        Text("7")
+                            .font(.system(size: 40))
+                            .frame(width: 80, height: 80)
+                            .foregroundColor(.black)
+                            .background(Color.white)
+                            .clipShape(Circle())
+                            .contentShape(Circle())
                     }
-                    .frame(width: 80.0, height: 80.0)
-                    .font(.system(size: 40))
-                    .foregroundColor(Color.black)
-                    .background(.white)
-                    .clipShape(Circle())
-                    Button("8") {
-                        handleDigit("8") // 處理數字 8
+                    .buttonStyle(PlainButtonStyle())
+
+                    // 數字 8
+                    Button(action: {
+                        handleDigit("8")
+                    }) {
+                        Text("8")
+                            .font(.system(size: 40))
+                            .frame(width: 80, height: 80)
+                            .foregroundColor(.black)
+                            .background(Color.white)
+                            .clipShape(Circle())
+                            .contentShape(Circle())
                     }
-                    .frame(width: 80.0, height: 80.0)
-                    .font(.system(size: 40))
-                    .foregroundColor(Color.black)
-                    .background(.white)
-                    .clipShape(Circle())
-                    Button("9") {
-                        handleDigit("9") // 處理數字 9
+                    .buttonStyle(PlainButtonStyle())
+
+                    // 數字 9
+                    Button(action: {
+                        handleDigit("9")
+                    }) {
+                        Text("9")
+                            .font(.system(size: 40))
+                            .frame(width: 80, height: 80)
+                            .foregroundColor(.black)
+                            .background(Color.white)
+                            .clipShape(Circle())
+                            .contentShape(Circle())
                     }
-                    .frame(width: 80.0, height: 80.0)
-                    .font(.system(size: 40))
-                    .foregroundColor(Color.black)
-                    .background(.white)
-                    .clipShape(Circle())
-                    Button("×") {
-                        handleOperator("×") // 處理乘法操作
+                    .buttonStyle(PlainButtonStyle())
+
+                    // 乘號 ×
+                    Button(action: {
+                        handleOperator("×")
+                    }) {
+                        Text("×")
+                            .font(.system(size: 40))
+                            .frame(width: 80, height: 80)
+                            .foregroundColor(.black)
+                            .background(Color(.systemGray4))
+                            .clipShape(Circle())
+                            .contentShape(Circle())
                     }
-                    .frame(width: 80.0, height: 80.0)
-                    .font(.system(size: 40))
-                    .foregroundColor(Color.black)
-                    .background(Color(.systemGray4))
-                    .clipShape(Circle())
+                    .buttonStyle(PlainButtonStyle())
+
                 }
 
                 // 數字和運算符按鈕
                 HStack {
-                    Button("4") {
-                        handleDigit("4") // 處理數字 4
+                    // 數字 4
+                    Button(action: {
+                        handleDigit("4")
+                    }) {
+                        Text("4")
+                            .font(.system(size: 40))
+                            .frame(width: 80, height: 80)
+                            .foregroundColor(.black)
+                            .background(Color.white)
+                            .clipShape(Circle())
+                            .contentShape(Circle())
                     }
-                    .frame(width: 80.0, height: 80.0)
-                    .font(.system(size: 40))
-                    .foregroundColor(Color.black)
-                    .background(.white)
-                    .clipShape(Circle())
-                    Button("5") {
-                        handleDigit("5") // 處理數字 5
+                    .buttonStyle(PlainButtonStyle())
+
+                    // 數字 5
+                    Button(action: {
+                        handleDigit("5")
+                    }) {
+                        Text("5")
+                            .font(.system(size: 40))
+                            .frame(width: 80, height: 80)
+                            .foregroundColor(.black)
+                            .background(Color.white)
+                            .clipShape(Circle())
+                            .contentShape(Circle())
                     }
-                    .frame(width: 80.0, height: 80.0)
-                    .font(.system(size: 40))
-                    .foregroundColor(Color.black)
-                    .background(.white)
-                    .clipShape(Circle())
-                    Button("6") {
-                        handleDigit("6") // 處理數字 6
+                    .buttonStyle(PlainButtonStyle())
+
+                    // 數字 6
+                    Button(action: {
+                        handleDigit("6")
+                    }) {
+                        Text("6")
+                            .font(.system(size: 40))
+                            .frame(width: 80, height: 80)
+                            .foregroundColor(.black)
+                            .background(Color.white)
+                            .clipShape(Circle())
+                            .contentShape(Circle())
                     }
-                    .frame(width: 80.0, height: 80.0)
-                    .font(.system(size: 40))
-                    .foregroundColor(Color.black)
-                    .background(.white)
-                    .clipShape(Circle())
-                    Button("-") {
-                        handleOperator("-") // 處理減法操作
+                    .buttonStyle(PlainButtonStyle())
+
+                    // 減號 -
+                    Button(action: {
+                        handleOperator("-")
+                    }) {
+                        Text("-")
+                            .font(.system(size: 40))
+                            .frame(width: 80, height: 80)
+                            .foregroundColor(.black)
+                            .background(Color(.systemGray4))
+                            .clipShape(Circle())
+                            .contentShape(Circle())
                     }
-                    .frame(width: 80.0, height: 80.0)
-                    .font(.system(size: 40))
-                    .foregroundColor(Color.black)
-                    .background(Color(.systemGray4))
-                    .clipShape(Circle())
+                    .buttonStyle(PlainButtonStyle())
+
                 }
 
                 // 數字和運算符按鈕
                 HStack {
-                    Button("1") {
-                        handleDigit("1") // 處理數字 1
+                    Button(action: {
+                        handleDigit("1")
+                    }) {
+                        Text("1")
+                            .font(.system(size: 40))
+                            .frame(width: 80, height: 80)
+                            .foregroundColor(.black)
+                            .background(Color.white)
+                            .clipShape(Circle())
+                            .contentShape(Circle())
                     }
-                    .frame(width: 80.0, height: 80.0)
-                    .font(.system(size: 40))
-                    .foregroundColor(Color.black)
-                    .background(.white)
-                    .clipShape(Circle())
-                    Button("2") {
-                        handleDigit("2") // 處理數字 2
+                    .buttonStyle(PlainButtonStyle())
+
+                    Button(action: {
+                        handleDigit("2")
+                    }) {
+                        Text("2")
+                            .font(.system(size: 40))
+                            .frame(width: 80, height: 80)
+                            .foregroundColor(.black)
+                            .background(Color.white)
+                            .clipShape(Circle())
+                            .contentShape(Circle())
                     }
-                    .frame(width: 80.0, height: 80.0)
-                    .font(.system(size: 40))
-                    .foregroundColor(Color.black)
-                    .background(.white)
-                    .clipShape(Circle())
-                    Button("3") {
-                        handleDigit("3") // 處理數字 3
+                    .buttonStyle(PlainButtonStyle())
+
+                    Button(action: {
+                        handleDigit("3")
+                    }) {
+                        Text("3")
+                            .font(.system(size: 40))
+                            .frame(width: 80, height: 80)
+                            .foregroundColor(.black)
+                            .background(Color.white)
+                            .clipShape(Circle())
+                            .contentShape(Circle())
                     }
-                    .frame(width: 80.0, height: 80.0)
-                    .font(.system(size: 40))
-                    .foregroundColor(Color.black)
-                    .background(.white)
-                    .clipShape(Circle())
-                    Button("+") {
-                        handleOperator("+") // 處理加法操作
+                    .buttonStyle(PlainButtonStyle())
+
+                    Button(action: {
+                        handleOperator("+")
+                    }) {
+                        Text("+")
+                            .font(.system(size: 40))
+                            .frame(width: 80, height: 80)
+                            .foregroundColor(.black)
+                            .background(Color(.systemGray4))
+                            .clipShape(Circle())
+                            .contentShape(Circle())
                     }
-                    .frame(width: 80.0, height: 80.0)
-                    .font(.system(size: 40))
-                    .foregroundColor(Color.black)
-                    .background(Color(.systemGray4))
-                    .clipShape(Circle())
+                    .buttonStyle(PlainButtonStyle())
+
                 }
 
                 // 最後一行按鈕 (0 和 .，以及計算結果)
                 HStack {
-                    Button("00") {
-                        handleDoubleZero() // 處理數字 00
+                    Button(action: {
+                        handleDoubleZero()
+                    }) {
+                        Text("00")
+                            .font(.system(size: 40))
+                            .frame(width: 80, height: 80)
+                            .foregroundColor(.black)
+                            .background(Color.white)
+                            .clipShape(Circle())
+                            .contentShape(Circle())
                     }
-                    .frame(width: 80.0, height: 80.0)
-                    .font(.system(size: 40))
-                    .foregroundColor(Color.black)
-                    .background(.white)
-                    .clipShape(Circle())
-                    Button("0") {
-                        handleDigit("0") // 處理數字 0
+                    .buttonStyle(PlainButtonStyle())
+
+                    Button(action: {
+                        handleDigit("0")
+                    }) {
+                        Text("0")
+                            .font(.system(size: 40))
+                            .frame(width: 80, height: 80)
+                            .foregroundColor(.black)
+                            .background(Color.white)
+                            .clipShape(Circle())
+                            .contentShape(Circle())
                     }
-                    .frame(width: 80.0, height: 80.0)
-                    .font(.system(size: 40))
-                    .foregroundColor(Color.black)
-                    .background(.white)
-                    .clipShape(Circle())
-                    Button(".") {
-                        handleDecimalPoint() // 處理小數點
+                    .buttonStyle(PlainButtonStyle())
+
+                    Button(action: {
+                        handleDecimalPoint()
+                    }) {
+                        Text(".")
+                            .font(.system(size: 40))
+                            .frame(width: 80, height: 80)
+                            .foregroundColor(.black)
+                            .background(Color.white)
+                            .clipShape(Circle())
+                            .contentShape(Circle())
                     }
-                    .frame(width: 80.0, height: 80.0)
-                    .font(.system(size: 40))
-                    .foregroundColor(Color.black)
-                    .background(.white)
-                    .clipShape(Circle())
-                    Button("=") {
-                        calculateResult() // 計算結果
+                    .buttonStyle(PlainButtonStyle())
+
+                    Button(action: {
+                        calculateResult()
+                    }) {
+                        Text("=")
+                            .font(.system(size: 40))
+                            .frame(width: 80, height: 80)
+                            .foregroundColor(.black)
+                            .background(Color.orange)
+                            .clipShape(Circle())
+                            .contentShape(Circle())
                     }
-                    .frame(width: 80.0, height: 80.0)
-                    .font(.system(size: 40))
-                    .foregroundColor(Color.black)
-                    .background(.orange)
-                    .clipShape(Circle())
+                    .buttonStyle(PlainButtonStyle())
                 }
-               
             }
             
             // 各種工具列按鈕
@@ -405,16 +557,36 @@ struct ContentView: View {
     
     // 處理數字輸入
     func handleDigit(_ digit: String) {
-        if isTypingNumber {
-            calculationProcess += digit
-        } else {
-            calculationProcess += " " + digit
+        // 如果剛剛按下等號，就重設
+        if didPressEqual {
+            calculationProcess = ""
+            display = ""
+            previousValue = nil
+            currentOperator = nil
+            isTypingNumber = false
+            didPressEqual = false // ⭐️ 清除狀態
         }
-        isTypingNumber = true
+        if digit == "π" {
+            // 如果前面是數字，插入乘號
+            if let lastChar = calculationProcess.last, lastChar.isNumber {
+                calculationProcess += " × π"
+            }
+        } else {
+            //正常運算
+            if isTypingNumber {
+                calculationProcess += digit
+            } else {
+                calculationProcess += " " + digit
+            }
+            isTypingNumber = true
+        }
     }
+
+
 
     // 處理小數點輸入
     func handleDecimalPoint() {
+
         if !display.contains(".") {
             if isTypingNumber {
                 calculationProcess += ".";
@@ -485,21 +657,31 @@ struct ContentView: View {
         }
     }
 
-
-
     // 計算結果，先乘除後加減
     func calculateResult() {
-        let expression = calculationProcess.trimmingCharacters(in: .whitespaces)
-
-        if let result = ExpressionParser.evaluate(expression: expression) {
-            display = formatNumber(result)
-            calculationProcess += " ="
+        //避免使用者連續按下兩次等於，若按下兩次等於直接讓運算歸零，進行新的運算
+        if didPressEqual == true{
+            calculationProcess = ""
+            display = "0"
             previousValue = nil
             currentOperator = nil
             isTypingNumber = false
-        } else {
-            display = "錯誤"
+            didPressEqual = false // ⭐️ 清除狀態
+        }else{
+            let expression = calculationProcess.trimmingCharacters(in: .whitespaces)
+
+            if let result = ExpressionParser.evaluate(expression: expression) {
+                display = formatNumber(result)
+                calculationProcess += " ="
+                previousValue = nil
+                currentOperator = nil
+                isTypingNumber = false
+                didPressEqual = true // 記錄按下等於
+            } else {
+                display = "錯誤"
+            }
         }
+
     }
 
 
@@ -536,22 +718,36 @@ struct ContentView: View {
     
 }
 
-
-
 // 解析字串運算式 先乘除與取餘，再加減
 class ExpressionParser {
     static func evaluate(expression: String) -> Double? {
-        var tokens = expression.components(separatedBy: " ")
-
-        // 處理乘除與取餘
+        // 先處理乘法，例如 "2π"
+        var modifiedExpression = expression
+        
+        // 使用正則表達式找出數字後直接接 π 的狀況，插入乘號 *
+        let patterns = [
+            #"(?<=\d)π"#,    // 數字後面接 π
+        ]
+        //送到 ExpressionParser.evaluate 後：expression = "2 × π"
+        //先替換 π 為 3.1415926
+        //變成 2 × 3.1415926
+        for pattern in patterns {
+            modifiedExpression = modifiedExpression.replacingOccurrences(of: pattern, with: "*π", options: .regularExpression)
+        }
+        
+        // 將 π 替換成 Double.pi 字串
+        modifiedExpression = modifiedExpression.replacingOccurrences(of: "π", with: String(Double.pi))
+        
+        // 拆成 tokens
+        var tokens = modifiedExpression.components(separatedBy: " ")
+        
+        // 之後照原本邏輯計算乘除與加減
         var index = 0
         while index < tokens.count {
             if tokens[index] == "×" || tokens[index] == "÷" || tokens[index] == "%" {
                 if let left = Double(tokens[index - 1]),
                    let right = Double(tokens[index + 1]) {
-
                     var result: Double?
-
                     switch tokens[index] {
                     case "×":
                         result = left * right
@@ -562,14 +758,12 @@ class ExpressionParser {
                     default:
                         break
                     }
-
                     if let result = result {
                         tokens.replaceSubrange(index - 1...index + 1, with: [String(result)])
                         index = max(index - 1, 0)
                     } else {
-                        return nil // 除以 0 或其他錯誤
+                        return nil
                     }
-
                 } else {
                     return nil
                 }
@@ -578,7 +772,7 @@ class ExpressionParser {
             }
         }
 
-        // 處理加減
+        // 加減法處理
         index = 0
         while index < tokens.count {
             if tokens[index] == "+" || tokens[index] == "-" {
@@ -598,9 +792,6 @@ class ExpressionParser {
         return Double(tokens.first ?? "")
     }
 }
-
-
-
 
 
 #Preview {
